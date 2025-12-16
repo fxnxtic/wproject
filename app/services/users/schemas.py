@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 class User(BaseModel):
     id: int
-    inviter_id: int
+    inviter_id: int | None = None
     role: str
     firstname: str
     created_at: datetime
