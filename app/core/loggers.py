@@ -39,8 +39,8 @@ def init_logging(mute_loggers: list[str] | None = None, debug: bool = False) -> 
 
     structlog.configure(
         processors=[
-            structlog.processors.TimeStamper(fmt="iso"),
-            structlog.stdlib.add_log_level,
+            # structlog.processors.TimeStamper(fmt="iso"),
+            # structlog.stdlib.add_log_level,
             structlog.processors.format_exc_info,
             renderer,
         ],
@@ -56,6 +56,7 @@ def init_logging(mute_loggers: list[str] | None = None, debug: bool = False) -> 
         structlog.stdlib.ProcessorFormatter(
             processor=renderer,
             foreign_pre_chain=[
+                structlog.stdlib.add_logger_name,
                 structlog.stdlib.add_log_level,
                 structlog.processors.TimeStamper(fmt="iso"),
             ],
