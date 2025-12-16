@@ -9,8 +9,9 @@ logger = structlog.get_logger(__name__)
 
 
 class UserService(SQLAlchemyService[UserModel, UserCreate, UserUpdate, User]):
-    def __init__(self, db: Database):
+    def __init__(self, db: Database, developers: list[int] = []):
         repo = UserRepository(db)
+        self.developers = developers
         super().__init__(repo, User)
 
     async def startup(self):
@@ -18,6 +19,12 @@ class UserService(SQLAlchemyService[UserModel, UserCreate, UserUpdate, User]):
 
     async def shutdown(self):
         logger.info("User service stopped")
+
+    async def create(self, data):
+        if data.id in self.developers:
+            data.role = "developer" if data.role is None else data.role
+        obj = await self.repo.create(data)
+        return self._to_read_schema(obj)
 
     async def get_role(self, id: int) -> str | None:
         return await self.repo.get_role(id)
