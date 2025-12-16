@@ -1,5 +1,4 @@
 import asyncio
-import os
 from pathlib import Path
 
 from alembic import command
@@ -7,8 +6,6 @@ from alembic.config import Config
 
 import app._const as c
 from app.core import cfg
-
-ALEMBIC_INI_PATH = os.path.join(os.path.dirname(__file__), "../alembic.ini")
 
 
 async def upgrade_head(alembic_path: str | Path = None):
@@ -25,7 +22,8 @@ async def upgrade_head(alembic_path: str | Path = None):
 
     alembic_cfg = Config(alembic_path)
 
-    alembic_cfg.set_main_option("sqlalchemy.url", cfg.db_url)
+    alembic_cfg.set_main_option("sqlalchemy.url", cfg.DATABASE_URL)
+    alembic_cfg.set_main_option("script_location", str(c.ALEMBIC_DIR_PATH))
 
     loop = asyncio.get_event_loop()
     await loop.run_in_executor(None, command.upgrade, alembic_cfg, "head")
