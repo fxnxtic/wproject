@@ -1,5 +1,7 @@
 ## wproject
 
+[README-RU.md](https://github.com/fxnxtic/wproject/blob/master/README-RU.md)
+
 Simple AI roleplay Telegram chatbot. Adaptation of commercial project for learning and research purposes.
 
 ### Features
