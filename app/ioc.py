@@ -2,6 +2,7 @@ from typing import AsyncIterable
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.base import BaseStorage
+from aiogram.fsm.strategy import FSMStrategy
 from dishka import Provider, Scope, provide
 from raito import Raito
 from redis.asyncio import Redis
@@ -54,7 +55,7 @@ class ServicesProvider(Provider):
 
     @provide(scope=Scope.APP)
     async def dispatcher(self, storage: BaseStorage) -> AsyncIterable[Dispatcher]:
-        dispatcher = await setup_dispatcher(storage)
+        dispatcher = await setup_dispatcher(storage, fsm_strategy=FSMStrategy.CHAT_TOPIC)
         yield dispatcher
 
     @provide(scope=Scope.APP)
