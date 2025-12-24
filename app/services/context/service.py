@@ -17,14 +17,14 @@ class ContextService:
     async def shutdown(self) -> None:
         logger.info("Context service stopped")
 
-    async def enable_chat(self, chat_id: str) -> None:
-        await self.storage.enable_chat(chat_id)
+    async def enable_chat(self, chat_id: str, topic_id: str | None = None) -> None:
+        await self.storage.enable_chat(chat_id, topic_id)
 
-    async def disable_chat(self, chat_id: str) -> None:
-        await self.storage.disable_chat(chat_id)
+    async def disable_chat(self, chat_id: str, topic_id: str | None = None) -> None:
+        await self.storage.disable_chat(chat_id, topic_id)
 
-    async def is_chat_enabled(self, chat_id: str) -> bool:
-        return await self.storage.is_chat_enabled(chat_id)
+    async def is_chat_enabled(self, chat_id: str, topic_id: str | None = None) -> bool:
+        return await self.storage.is_chat_enabled(chat_id, topic_id)
 
     async def get_summary(self, key: str) -> str | None:
         return await self.storage.get_summary(key)

@@ -8,8 +8,11 @@ class KeyBuilder:
         return f"summary:{key}"
 
     @staticmethod
-    def chat_status(chat_id: str, topic_id: str):
-        return f"group:status:{chat_id}:{topic_id}"
+    def chat_status(chat_id: str, topic_id: str | None = None) -> str:
+        key = f"group:status:{chat_id}"
+        if topic_id is not None:
+            key += f":{topic_id}"
+        return key
 
     @staticmethod
     def user_obj(user_id: int) -> str:

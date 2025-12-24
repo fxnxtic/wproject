@@ -29,14 +29,14 @@ class RedisContextStorage(IContextStorage):
         except Exception:
             self.encode = encode
 
-    async def enable_chat(self, chat_id):
-        await self.redis.set(kb.chat_status(chat_id), 1)
+    async def enable_chat(self, chat_id, topic_id = None):
+        await self.redis.set(kb.chat_status(chat_id, topic_id), 1)
 
-    async def disable_chat(self, chat_id):
-        await self.redis.set(kb.chat_status(chat_id), 0)
+    async def disable_chat(self, chat_id, topic_id = None):
+        await self.redis.set(kb.chat_status(chat_id, topic_id), 0)
 
-    async def is_chat_enabled(self, chat_id):
-        return bool((await self.redis.get(kb.chat_status(chat_id))))
+    async def is_chat_enabled(self, chat_id, topic_id = None):
+        return bool((await self.redis.get(kb.chat_status(chat_id, topic_id))))
 
     async def set_summary(self, key, summary):
         return await self.redis.set(kb.summary(key), summary)
