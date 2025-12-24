@@ -28,10 +28,10 @@ class CompletionService:
     async def shutdown(self):
         logger.info("Completion service stopped")
 
-    async def _get_system_prompt(self) -> str:
+    async def _get_system_prompt(self) -> str | None:
         system_prompt = await self.instructions_svc.get_last_prompt()
-        if system_prompt is None:
-            raise ValueError("System prompt not found")
+        # if system_prompt is None:
+        #    raise ValueError("System prompt not found")
 
         return system_prompt
 
@@ -43,13 +43,13 @@ class CompletionService:
         if chat_id is not None:
             logger.bind(chat_id=chat_id)
 
+        instructions = await self._get_system_prompt()
+
         prompt = [
-            {"role": ContextRole.SYSTEM, "content": as_block(await self._get_system_prompt())}
-        ] + context
+            {"role": ContextRole.SYSTEM, "content": as_block(instructions)}
+        ] + context if instructions else context
         req = context[-1]["content"][0]["text"].split("\n", 2)[1]
         logger.debug(f"Requests <{(req[:97] + '...') if len(req) > 100 else req}>")
-
-        logger.debug(prompt)
 
         async with OpenRouter(
             api_key=self.config.OPENROUTER_API_KEY,
