@@ -16,7 +16,7 @@ router = Router(name="commands.chat_status")
 
 @router.message(
     F.text == ".w enable",
-    F.chat.type in ["group", "supergroup"],
+    F.chat.type.in_(["group", "supergroup"]),
     DEVELOPER | OWNER | ADMINISTRATOR,
 )
 @rt.description("enable bot in chat")
@@ -33,7 +33,7 @@ async def enable_chat_cmd(
 
 @router.message(
     F.text == ".w disable",
-    F.chat.type in ["group", "supergroup"],
+    F.chat.type.in_(["group", "supergroup"]),
     DEVELOPER | OWNER | ADMINISTRATOR,
 )
 @rt.description("disable bot in chat")
