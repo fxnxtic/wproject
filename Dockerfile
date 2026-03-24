@@ -8,7 +8,10 @@ RUN apk add --no-cache \
 
 # ---- uv installation ----
 ENV UV_INSTALL_DIR=/usr/local/bin
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    echo "PATH=$PATH" && \
+    ls -R /root/.cargo || true && \
+    find / -name uv || true
 
 # ---- runtime env ----
 ENV UV_CACHE_DIR=/root/.cache/uv \
