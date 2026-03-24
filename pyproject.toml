@@ -9,6 +9,7 @@ dependencies = [
     "alembic>=1.17.2",
     "asyncpg>=0.31.0",
     "dishka>=1.7.2",
+    "epicbox>=1.1.0",
     "openrouter>=0.1.1",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
