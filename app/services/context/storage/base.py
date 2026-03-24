@@ -5,9 +5,9 @@ from tiktoken import encoding_for_model
 from app.core.settings import Settings
 from app.services.context.storage.protocol import IContextStorage
 from app.services.summary import SummaryService
-from app.types.context import CONTEXT_ROLE, ConversationContext
-from app.utils.key_builder import KeyBuilder as kb
+from app.types.context import ConversationContext
 from app.utils.encode import encode
+from app.utils.key_builder import KeyBuilder as kb
 
 
 class BaseContextStorage(IContextStorage):
@@ -24,7 +24,7 @@ class BaseContextStorage(IContextStorage):
             self.encode = encoding_for_model(self.config.COMPLETION_MODEL).encode
         except Exception:
             self.encode = encode
-        
+
         self.storage = defaultdict(dict)
 
     async def _set_chat_status(self, chat_id: str, status: bool) -> None:

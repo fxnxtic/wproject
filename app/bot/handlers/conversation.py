@@ -1,7 +1,7 @@
 import structlog
-from aiogram import F, Router, Bot
-from aiogram.types import Message
+from aiogram import Bot, F, Router
 from aiogram.filters import StateFilter
+from aiogram.types import Message
 from aiogram.utils.chat_action import ChatActionSender
 from dishka.integrations.aiogram import FromDishka, inject
 
@@ -96,13 +96,13 @@ async def on_message(
         else None,
         action="typing",
     ):
-        completion = await completion_svc.complete(
+        completions = await completion_svc.complete(
             context=context,
             user_id=message.from_user.id,
             chat_id=message.chat.id,
         )
 
-        response = await message.answer(completion)
+        response = await message.answer(completions[-1]["content"][0]["text"])
         await context_svc.add_message(
             key=key,
             role=ContextRole.ASSISTANT,

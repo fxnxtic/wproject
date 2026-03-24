@@ -23,9 +23,10 @@ from app.services.context.storage import (
     IContextStorage,
     RedisContextStorage,
 )
+from app.services.execution import ExecutionService
 from app.services.instructions import InstructionService
-from app.services.users import UserService
 from app.services.summary import SummaryService
+from app.services.users import UserService
 
 
 class ServicesProvider(Provider):
@@ -55,7 +56,9 @@ class ServicesProvider(Provider):
 
     @provide(scope=Scope.APP)
     async def dispatcher(self, storage: BaseStorage) -> AsyncIterable[Dispatcher]:
-        dispatcher = await setup_dispatcher(storage, fsm_strategy=FSMStrategy.CHAT_TOPIC)
+        dispatcher = await setup_dispatcher(
+            storage, fsm_strategy=FSMStrategy.CHAT_TOPIC
+        )
         yield dispatcher
 
     @provide(scope=Scope.APP)
@@ -87,7 +90,9 @@ class ServicesProvider(Provider):
             await service.shutdown()
 
     @provide(scope=Scope.APP)
-    async def context_storage(self, redis: Redis, summary_svc: SummaryService) -> AsyncIterable[IContextStorage]:
+    async def context_storage(
+        self, redis: Redis, summary_svc: SummaryService
+    ) -> AsyncIterable[IContextStorage]:
         storage = RedisContextStorage(config=cfg, redis=redis, summary_svc=summary_svc)
 
         yield storage
@@ -137,3 +142,7 @@ class ServicesProvider(Provider):
             yield service
         finally:
             await service.shutdown()
+
+    @provide(scope=Scope.APP)
+    async def execution_service(self) -> ExecutionService:
+        return ExecutionService()
