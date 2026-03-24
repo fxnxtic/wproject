@@ -81,7 +81,7 @@ class CompletionService:
                     prompt.append(
                         {
                             "role": ContextRole.ASSISTANT,
-                            "content": as_block(msg.content),
+                            "content": msg.content,
                         }
                     )
 
@@ -94,7 +94,7 @@ class CompletionService:
                         answers.append(
                             {
                                 "role": ContextRole.TOOL,
-                                "tool_name": tool_name,
+                                "tool_call_id": tool_call.id,
                                 "content": result,
                             }
                         )
@@ -105,9 +105,7 @@ class CompletionService:
                 if response.startswith(""):
                     response = re.sub(r"^<[^>]+>\s*", "", response, 1)
 
-                answers.append(
-                    {"role": ContextRole.ASSISTANT, "content": as_block(response)}
-                )
+                answers.append({"role": ContextRole.ASSISTANT, "content": response})
 
                 logger.debug(
                     f"Response <{(response[:97] + '...') if len(response) > 100 else response}>"

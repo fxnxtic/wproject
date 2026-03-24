@@ -19,7 +19,6 @@ from app.database import Database
 from app.services.completion import CompletionService
 from app.services.context import ContextService
 from app.services.context.storage import (
-    BaseContextStorage,
     IContextStorage,
     RedisContextStorage,
 )
@@ -50,7 +49,6 @@ class ServicesProvider(Provider):
 
     @provide(scope=Scope.APP)
     async def fsm_storage(self, redis: Redis) -> AsyncIterable[BaseStorage]:
-        redis = redis if not cfg.DEBUG else None  # use memory storage for debug mode
         storage = await setup_fsm_storage(redis)
         yield storage
 
@@ -133,9 +131,13 @@ class ServicesProvider(Provider):
 
     @provide(scope=Scope.APP)
     async def completion_service(
-        self, instructions_svc: InstructionService
+        self,
+        instructions_svc: InstructionService,
+        execution_svc: ExecutionService,
     ) -> AsyncIterable[CompletionService]:
-        service = CompletionService(config=cfg, instructions_svc=instructions_svc)
+        service = CompletionService(
+            config=cfg, instructions_svc=instructions_svc, execution_svc=execution_svc
+        )
 
         try:
             await service.startup()

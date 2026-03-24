@@ -1,8 +1,8 @@
 import structlog
 
-from app.types.context import CONTEXT_ROLE, ConversationContext
+from app.types.context import ConversationContext
 
-from .storage.base import IContextStorage
+from .storage.protocol import IContextStorage
 
 logger = structlog.get_logger(__name__)
 
@@ -28,12 +28,12 @@ class ContextService:
 
     async def get_summary(self, key: str) -> str | None:
         return await self.storage.get_summary(key)
-    
+
     async def set_summary(self, key: str, summary: str) -> None:
         await self.storage.set_summary(key, summary)
 
-    async def add_message(self, key: str, role: CONTEXT_ROLE, content: str) -> None:
-        await self.storage.add_message(key, role, content)
+    async def add_message(self, key: str, message) -> None:
+        await self.storage.add_message(key, message)
 
     async def clean(self, key: str) -> None:
         await self.storage.clean(key)

@@ -64,7 +64,7 @@ class ExecutionService:
                 "parameters": {
                     "type": "object",
                     "properties": {"content": {"type": "string"}},
-                    "required": ["query"],
+                    "required": ["content"],
                 },
             },
         }

@@ -6,7 +6,7 @@ from tiktoken import encoding_for_model
 
 from app.core.settings import Settings
 from app.enums.context import ContextRole
-from app.services.context.storage import IContextStorage
+from app.services.context.storage.protocol import IContextStorage
 from app.services.summary import SummaryService
 from app.utils.encode import encode
 from app.utils.format import as_block
@@ -59,7 +59,7 @@ class RedisContextStorage(IContextStorage):
 
     async def add_message(self, key, message: dict[str, Any]):
         content = message.get("content", "")
-        tokens = sum(self.encode(content)) if content else 0
+        tokens = sum(self.encode(str(content))) if content else 0
         message = dict(message)
         message["tokens"] = tokens
 
