@@ -1,5 +1,3 @@
-from typing import Literal
+from typing import Any
 
-CONTEXT_ROLE = Literal["system", "user", "assistant"]
-
-type ConversationContext = list[dict[CONTEXT_ROLE, str]]
+type ConversationContext = list[dict[str, Any]]

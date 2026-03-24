@@ -5,21 +5,19 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.client.telegram import TelegramAPIServer
 from aiogram.fsm.storage.base import BaseStorage
-from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import RedisStorage
 from raito import Raito
 from raito.utils.configuration import RaitoConfiguration
 from redis.asyncio import Redis
 
 import app._const as c
-from app.bot.middlewares import apply_middleware_to_all, HandleUpdatesMiddleware
+from app.bot.middlewares import HandleUpdatesMiddleware, apply_middleware_to_all
 from app.bot.utils.roles import CustomRoleManager, UserServiceRoleProvider
 from app.services.users import UserService
 
 
-async def setup_fsm_storage(redis: Redis | None = None) -> RedisStorage | MemoryStorage:
-    storage = RedisStorage(redis) if redis else MemoryStorage()
-    return storage
+async def setup_fsm_storage(redis: Redis) -> RedisStorage:
+    return RedisStorage(redis)
 
 
 async def setup_dispatcher(storage: BaseStorage, **kwargs) -> Dispatcher:

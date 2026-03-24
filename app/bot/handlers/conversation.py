@@ -1,7 +1,7 @@
 import structlog
-from aiogram import F, Router, Bot
-from aiogram.types import Message
+from aiogram import Bot, F, Router
 from aiogram.filters import StateFilter
+from aiogram.types import Message
 from aiogram.utils.chat_action import ChatActionSender
 from dishka.integrations.aiogram import FromDishka, inject
 
@@ -11,6 +11,7 @@ from app.enums.context import ContextRole
 from app.services.completion import CompletionService
 from app.services.context import ContextService
 from app.services.users import User, UserService
+from app.utils.format import as_block
 from app.utils.key_builder import KeyBuilder as kb
 
 _USERNAME: str | None = None
@@ -79,8 +80,10 @@ async def on_message(
 
     await context_svc.add_message(
         key=key,
-        role=ContextRole.USER,
-        content=_prepare_user_message(message, user),
+        message={
+            "role": ContextRole.USER,
+            "content": as_block(_prepare_user_message(message, user)),
+        },
     )
 
     context = await context_svc.get_context(key)
@@ -96,15 +99,22 @@ async def on_message(
         else None,
         action="typing",
     ):
-        completion = await completion_svc.complete(
+        completions = await completion_svc.complete(
             context=context,
             user_id=message.from_user.id,
             chat_id=message.chat.id,
         )
+        for comp in completions[:-2]:
+            await context_svc.add_message(
+                key=key,
+                message=comp,
+            )
 
-        response = await message.answer(completion)
+        response = await message.answer(completions[-1]["content"])
         await context_svc.add_message(
             key=key,
-            role=ContextRole.ASSISTANT,
-            content=_prepare_assistant_message(response),
+            message={
+                "role": ContextRole.ASSISTANT,
+                "content": as_block(_prepare_assistant_message(response)),
+            },
         )
