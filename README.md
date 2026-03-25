@@ -9,6 +9,7 @@ Simple AI roleplay Telegram chatbot. Adaptation of commercial project for learni
 * Separated context for every dm, chat and topic
 * Smart context with cutoff and summary
 * AI via [Openrouter API](https://openrouter.ai/)
+* Code execution with a local Docker containers 
 
 ### Usage
 
@@ -65,6 +66,7 @@ uv run -m app
 * redis
 * uv
 * docker
+* epicbox
 
 ---
 
